@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/ReactionsAndroid.iml" filepath="$PROJECT_DIR$/ReactionsAndroid.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/reactions-android/reactions-android.iml" filepath="$PROJECT_DIR$/reactions-android/reactions-android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/reactions-kotlin/reactions-kotlin.iml" filepath="$PROJECT_DIR$/reactions-kotlin/reactions-kotlin.iml" />
+    </modules>
+  </component>
+</project>
