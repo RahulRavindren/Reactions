@@ -23,4 +23,8 @@ public class ReactionButton extends RelativeLayout {
         super(context, attrs, defStyleAttr);
     }
 
+    private void setup() {
+
+    }
+
 }

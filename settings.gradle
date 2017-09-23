@@ -1,1 +1,1 @@
-include ':app', ':reactions-android', ':reactions-kotlin'
+include ':app', ':reactions-java', ':reactions-kotlin'

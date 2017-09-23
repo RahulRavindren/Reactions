@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ReactionButton">
+        <attr name="RBtext_icon_spacing" format="integer" />
+        <attr name="RBicon_margin" format="integer" />
+        <attr name="RBfont_size" format="integer" />
+        <attr name="RBunselected_tint_color" format="color" />
+        <attr name="RBtext_icon_alignment" format="string" />
+    </declare-styleable>
+</resources>
