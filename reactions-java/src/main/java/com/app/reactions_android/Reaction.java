@@ -11,6 +11,7 @@ public final class Reaction {
     final private Drawable icon;
     final private Drawable alternativeIcon;
 
+
     public Reaction(String id, String title, int color, Drawable icon, Drawable alternativeIcon) {
         this.id = id;
         this.title = title;
