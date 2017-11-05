@@ -4,6 +4,7 @@ package com.app.reactions_android;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Rect;
 import android.support.annotation.ColorRes;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -13,9 +14,11 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.app.reactions_android.enums.ReactionFeedback;
 import com.app.reactions_android.enums.TEXT_RELATIVE_ALIGNMENT;
+import com.app.reactions_android.listeners.ReactionFeedbackImpl;
 
-public final class ReactionButton extends RelativeLayout {
+public final class ReactionButton extends RelativeLayout implements ReactionFeedbackImpl {
     //launch reaction selector
     ReactionSelector reactionSelector = new ReactionSelector(getContext());
     private ImageView iconImageView;
@@ -116,11 +119,17 @@ public final class ReactionButton extends RelativeLayout {
         addView(textView);
     }
 
+    @Override
+    public void reactionFeedbackDidChanged(ReactionFeedback feedback) {
+
+    }
+
     class GestureRecogniser implements View.OnTouchListener {
         private final float SCROLL_THRESHOLD = 10;
         private float downX;
         private float downY;
         private boolean isOnClick;
+        private Rect viewRect;
 
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -129,6 +138,8 @@ public final class ReactionButton extends RelativeLayout {
                     downX = motionEvent.getX();
                     downY = motionEvent.getY();
                     isOnClick = true;
+                    clear();
+                    viewRect = new Rect(view.getLeft(), view.getTop(), view.getRight(), view.getBottom());
                     break;
                 case MotionEvent.ACTION_CANCEL:
                     break;
@@ -138,13 +149,24 @@ public final class ReactionButton extends RelativeLayout {
                         ObjectAnimator.ofFloat(view, "scaleX", 1.8f, 1.8f)
                                 .setDuration(300).start();
                     }
+                    clear();
                     break;
                 case MotionEvent.ACTION_MOVE:
                     if (isOnClick && (Math.abs(downX - motionEvent.getX()) > SCROLL_THRESHOLD) ||
                             (Math.abs(downY - motionEvent.getY()) > SCROLL_THRESHOLD)) {
                         isOnClick = false;
-                        reactionSelector.getReactionSelectorListener().moveX(downX, motionEvent.getX());
-                        reactionSelector.getReactionSelectorListener().moveY(downY, motionEvent.getY());
+                        if (viewRect != null) {
+                            view.getHitRect(viewRect);
+                            if (viewRect.contains(Math.round(view.getRootView().getX() + downX),
+                                    Math.round(view.getY() + downY))) {
+                                reactionFeedbackDidChanged(ReactionFeedback.SLIDE_FINGER_ACROSS);
+                                reactionSelector.getReactionSelectorListener()
+                                        .move(downX, motionEvent.getX(), downY, motionEvent.getY());
+                            } else {
+                                reactionFeedbackDidChanged(ReactionFeedback.RELEASE_TO_CANCEL);
+                            }
+
+                        }
                         this.downX = motionEvent.getX();
                         this.downY = motionEvent.getY();
                     }
@@ -156,7 +178,9 @@ public final class ReactionButton extends RelativeLayout {
             return true;
         }
 
+        private void clear() {
+            viewRect = null;
+        }
+
     }
-
-
 }

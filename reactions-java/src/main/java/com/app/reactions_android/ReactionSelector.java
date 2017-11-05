@@ -30,12 +30,7 @@ public class ReactionSelector extends LinearLayout {
 
     public class ReactionSelectorListener implements GuesterListeners {
         @Override
-        public void moveX(float oldX, float newX) {
-
-        }
-
-        @Override
-        public void moveY(float oldY, float newY) {
+        public void move(float oldX, float newX, float oldY, float newY) {
 
         }
     }

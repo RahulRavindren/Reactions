@@ -1,7 +1,7 @@
-package com.app.reactions_android;
+package com.app.reactions_android.enums;
 
 
-enum ReactionFeedback {
+public enum ReactionFeedback {
     SLIDE_FINGER_ACROSS, RELEASE_TO_CANCEL, TAP_TO_SELECT_REACTION;
 
     public String localizedString(ReactionFeedback feedback) {
