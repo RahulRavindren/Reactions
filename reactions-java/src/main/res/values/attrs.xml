@@ -2,7 +2,6 @@
 <resources>
     <declare-styleable name="ReactionButton">
         <attr name="RB_text_icon_spacing" format="integer" />
-        <attr name="RB_icon_margin" format="integer" />
         <attr name="RB_font_size" format="integer" />
         <attr name="RB_unselected_tint_color" format="color" />
         <attr name="RB_text_icon_alignment" format="string" />
