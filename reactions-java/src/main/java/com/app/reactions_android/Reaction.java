@@ -12,7 +12,6 @@ public final class Reaction {
     public static final Reaction[] DEFAULT_LIST = new Reaction[]{LIKE};
 
 
-
     final private String id;
     final private String title;
     final @IntegerRes
@@ -21,6 +20,8 @@ public final class Reaction {
     final private int icon;
     @DrawableRes
     final private int alternativeIcon;
+    final private String gifPath;
+
 
     public Reaction(String id, String title, int color, int icon, int alternativeIcon) {
         this.id = id;
@@ -28,6 +29,16 @@ public final class Reaction {
         this.color = color;
         this.icon = icon;
         this.alternativeIcon = alternativeIcon;
+        this.gifPath = null;
+    }
+
+    public Reaction(String id, String title, int color, String gifPath) {
+        this.id = id;
+        this.title = title;
+        this.color = color;
+        this.gifPath = gifPath;
+        this.icon = 0;
+        this.alternativeIcon = -1;
     }
 
     public String getId() {
