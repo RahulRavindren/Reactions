@@ -8,6 +8,11 @@ public final class Reaction {
     public static final Reaction LIKE = new Reaction("0", "Like",
             android.R.color.holo_blue_bright, android.R.drawable.ic_media_play,
             android.R.drawable.ic_media_play);
+
+    public static final Reaction[] DEFAULT_LIST = new Reaction[]{LIKE};
+
+
+
     final private String id;
     final private String title;
     final @IntegerRes

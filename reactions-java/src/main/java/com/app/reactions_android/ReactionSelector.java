@@ -24,6 +24,18 @@ public class ReactionSelector extends LinearLayout {
         super(context, attrs, defStyleAttr);
     }
 
+    private void setup() {
+
+    }
+
+    private void inflateWithoutLottie() {
+
+    }
+
+    private void inflateWithLottie() {
+
+    }
+
     public ReactionSelectorListener getReactionSelectorListener() {
         return reactionSelectorListener;
     }
