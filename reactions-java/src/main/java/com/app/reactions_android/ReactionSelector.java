@@ -29,12 +29,20 @@ public class ReactionSelector extends LinearLayout {
     }
 
     private void inflateWithoutLottie() {
+        removeAllViews();
 
     }
 
     private void inflateWithLottie() {
-
+        removeAllViews();
+        for (Reaction reaction : Reaction.DEFAULT_LIST_LOTTIE) {
+            ReactionSelectorComponent selectorComponent =
+                    new ReactionSelectorComponent(getContext(), reaction);
+            addView(selectorComponent);
+        }
     }
+
+
 
     public ReactionSelectorListener getReactionSelectorListener() {
         return reactionSelectorListener;

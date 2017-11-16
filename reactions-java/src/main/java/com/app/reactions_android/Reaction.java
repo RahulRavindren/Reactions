@@ -5,11 +5,15 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.IntegerRes;
 
 public final class Reaction {
-    public static final Reaction LIKE = new Reaction("0", "Like",
-            android.R.color.holo_blue_bright, android.R.drawable.ic_media_play,
-            android.R.drawable.ic_media_play);
+    public static final Reaction LIKE = new Reaction("0", "Like", android.R.color.white, "like.json");
+    public static final Reaction ANGRY = new Reaction("1", "Angry", android.R.color.white, "angry.json");
+    public static final Reaction HAHA = new Reaction("2", "Haha", android.R.color.white, "haha.json");
+    public static final Reaction LOVE = new Reaction("3", "Love", android.R.color.white, "love.json");
+    public static final Reaction SAD = new Reaction("4", "Sad", android.R.color.white, "sad.json");
+    public static final Reaction WOW = new Reaction("5", "Wow", android.R.color.white, "wow.json");
 
-    public static final Reaction[] DEFAULT_LIST = new Reaction[]{LIKE};
+
+    public static final Reaction[] DEFAULT_LIST_LOTTIE = new Reaction[]{LIKE, ANGRY, HAHA, LOVE, SAD, WOW};
 
 
     final private String id;
@@ -79,5 +83,12 @@ public final class Reaction {
         return "<Reaction id=" + id + " title=" + title;
     }
 
+    public String getGifPath() {
+        return gifPath;
+    }
+
+    public boolean isLottie() {
+        return gifPath != null;
+    }
 
 }
