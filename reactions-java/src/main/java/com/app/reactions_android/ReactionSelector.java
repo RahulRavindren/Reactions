@@ -22,11 +22,28 @@ public class ReactionSelector extends LinearLayout {
 
     public ReactionSelector(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        AttributeContainer attributeContainer = new AttributeContainer(context, attrs);
+        setup(attributeContainer);
     }
 
-    private void setup() {
+    private void setup(AttributeContainer container) {
+        if (container.isEnableLottieAnimation()) {
+            // inflate lottie animated reaction
+            inflateWithLottie();
+        } else {
+            // inflate image reaction
+            inflateWithoutLottie();
+        }
+
+        //create bg
+        createSelectorBackground();
 
     }
+
+    private void createSelectorBackground() {
+        setBackground(getResources().getDrawable(R.drawable.selector_oval_background));
+    }
+
 
     private void inflateWithoutLottie() {
         removeAllViews();
@@ -52,6 +69,20 @@ public class ReactionSelector extends LinearLayout {
         @Override
         public void move(float oldX, float newX, float oldY, float newY) {
 
+        }
+    }
+
+
+    protected class AttributeContainer {
+        private boolean enableLottieAnimation;
+
+        public AttributeContainer(final Context context,
+                                  final AttributeSet attributeSet) {
+
+        }
+
+        public boolean isEnableLottieAnimation() {
+            return enableLottieAnimation;
         }
     }
 }

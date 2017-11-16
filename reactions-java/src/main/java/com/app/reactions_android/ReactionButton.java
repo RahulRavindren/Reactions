@@ -20,7 +20,7 @@ import com.app.reactions_android.listeners.ReactionFeedbackImpl;
 
 public final class ReactionButton extends RelativeLayout implements ReactionFeedbackImpl {
     //launch reaction selector
-    ReactionSelector reactionSelector = new ReactionSelector(getContext());
+    ReactionSelector reactionSelector;
     private ImageView iconImageView;
     private TextView titleLabel;
     private int fontIconSpacing;
@@ -44,6 +44,9 @@ public final class ReactionButton extends RelativeLayout implements ReactionFeed
         super(context, attrs, defStyleAttr);
         setup();
         postInit(attrs);
+
+        //create reaction selector
+        reactionSelector = new ReactionSelector(context, attrs);
     }
 
     private void setup() {
