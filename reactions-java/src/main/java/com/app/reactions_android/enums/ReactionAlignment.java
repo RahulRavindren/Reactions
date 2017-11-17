@@ -1,4 +1,4 @@
-package com.app.reactions_android;
+package com.app.reactions_android.enums;
 
 
 public enum ReactionAlignment {
