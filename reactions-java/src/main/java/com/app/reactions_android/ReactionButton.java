@@ -16,17 +16,21 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.app.reactions_android.delegate.ReactionButtonDelegate;
 import com.app.reactions_android.enums.ReactionFeedback;
 import com.app.reactions_android.enums.TEXT_RELATIVE_ALIGNMENT;
 import com.app.reactions_android.listeners.ReactionFeedbackImpl;
+import com.app.reactions_android.listeners.ReactionSelectorFeedbackImpl;
 
-public final class ReactionButton extends RelativeLayout implements ReactionFeedbackImpl {
+public final class ReactionButton extends RelativeLayout
+        implements ReactionFeedbackImpl, ReactionSelectorFeedbackImpl {
     public static final String TAG = ReactionButton.class.getSimpleName();
     //launch reaction selector
     ReactionSelector reactionSelector;
     private ImageView iconImageView;
     private TextView titleLabel;
     private AttributeContainer attributeContainer;
+    private ReactionButtonDelegate reactionButtonDelegate;
 
 
     public ReactionButton(Context context) {
@@ -39,17 +43,29 @@ public final class ReactionButton extends RelativeLayout implements ReactionFeed
 
     public ReactionButton(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        setup();
-        //container
-        attributeContainer = new AttributeContainer(context, attrs);
 
-        //create reaction selector
-        reactionSelector = new ReactionSelector(context, attrs);
+        //avoid editor not rendering custom view
+        if (!isInEditMode()) {
+            //container
+            attributeContainer = new AttributeContainer(context, attrs);
+
+            //delegate
+            reactionButtonDelegate = new ReactionButtonDelegate();
+
+            //create reaction selector
+            reactionSelector = new ReactionSelector(context, attrs, reactionButtonDelegate);
+
+            setup();
+        }
     }
 
     private void setup() {
         GestureRecogniser recogniser = new GestureRecogniser();
         setOnTouchListener(recogniser);
+
+        //inflate view
+        inflateButton();
+        inflateText();
     }
 
     @Override
@@ -66,7 +82,7 @@ public final class ReactionButton extends RelativeLayout implements ReactionFeed
         button.setBackground(null);
         button.setImageResource(
                 attributeContainer.isSelected ? defaultReaction.getIcon() : defaultReaction.getAlternativeIcon());
-        button.setForeground(getResources().getDrawable(attributeContainer.isSelected ? attributeContainer.selectedColorRes : attributeContainer.unselectedColorRes));
+        //button.setImageTintList(attributeContainer.isSelected ? new ColorStateList(attributeContainer.selectedColorRes) : new ColorStateList(attributeContainer.unselectedColorRes));
         RelativeLayout.LayoutParams params =
                 new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         TEXT_RELATIVE_ALIGNMENT align = TEXT_RELATIVE_ALIGNMENT.getAlignment(attributeContainer.fontRelativeAlignment);
@@ -114,12 +130,18 @@ public final class ReactionButton extends RelativeLayout implements ReactionFeed
         Logger.debug(TAG, "Reaction feedback changed to  ----- " + feedback.name());
     }
 
+    @Override
+    public void hoveredReaction(Reaction reaction) {
+
+    }
+
     class GestureRecogniser implements View.OnTouchListener {
         private final float SCROLL_THRESHOLD = 10;
         private float downX;
         private float downY;
         private boolean isOnClick;
         private Rect viewRect;
+
 
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -195,11 +217,9 @@ public final class ReactionButton extends RelativeLayout implements ReactionFeed
                             (int) getContext().getResources().getDimension(R.dimen.font_icon_spacing));
                     fontSize = a.getDimension(R.styleable.ReactionButton_RB_font_size, 20);
                     unselectedColorRes =
-                            a.getColor(R.styleable.ReactionButton_RB_unselected_tint_color, Color.GRAY);
-                    selectedColorRes = a.getColor(R.styleable.ReactionButton_RB_selected_tint_color, Color.BLUE);
+                            a.getResourceId(R.styleable.ReactionButton_RB_unselected_tint_color, Color.GRAY);
+                    selectedColorRes = a.getResourceId(R.styleable.ReactionButton_RB_selected_tint_color, Color.BLUE);
                     fontRelativeAlignment = a.getString(R.styleable.ReactionButton_RB_text_icon_alignment);
-                    inflateButton();
-                    inflateText();
                 } finally {
                     a.recycle();
                 }

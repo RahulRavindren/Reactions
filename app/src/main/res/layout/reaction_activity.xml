@@ -9,8 +9,9 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         reaction:RB_font_size="14dp"
-        reaction:RB_text_icon_alignment="20dp"
+        reaction:RB_selected_tint_color="@color/colorPrimary"
+        reaction:RB_text_icon_alignment="right"
         reaction:RB_text_icon_spacing="20dp"
-        reaction:RB_unselected_tint_color="@color/colorPrimary" />
+        reaction:RB_unselected_tint_color="@android:color/darker_gray" />
 
 </LinearLayout>
