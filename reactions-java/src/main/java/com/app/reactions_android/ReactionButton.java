@@ -125,14 +125,28 @@ public final class ReactionButton extends RelativeLayout
         addView(textView);
     }
 
+    private void updateReaction(Reaction reaction) {
+        ImageButton reactionButton = (ImageButton) getChildAt(0);
+        reactionButton.setImageResource(reaction.getIcon());
+        invalidate();
+
+        //text
+        TextView reactionText = (TextView) getChildAt(1);
+        reactionText.setText(reaction.getTitle());
+        reactionText.setTextColor();
+    }
+
     @Override
     public void reactionFeedbackDidChanged(ReactionFeedback feedback) {
         Logger.debug(TAG, "Reaction feedback changed to  ----- " + feedback.name());
     }
 
     @Override
-    public void hoveredReaction(Reaction reaction) {
+    public void hoveredReaction(final @Nullable Reaction reaction) {
+        if (reaction != null) {
+            //apply reaction
 
+        }
     }
 
     class GestureRecogniser implements View.OnTouchListener {

@@ -5,6 +5,7 @@
         <attr name="RB_font_size" format="dimension" />
         <attr name="RB_selected_tint_color" format="reference" />
         <attr name="RB_unselected_tint_color" format="reference" />
+        <attr name="RB_enable_reaction_animation" format="boolean" />
         <attr name="RB_text_icon_alignment" format="string" />
     </declare-styleable>
 </resources>

@@ -1,6 +1,7 @@
 package com.app.reactions_android;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Rect;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -96,7 +97,16 @@ public class ReactionSelector extends LinearLayout {
 
         public AttributeContainer(final Context context,
                                   final AttributeSet attributeSet) {
+            if (attributeSet != null) {
+                TypedArray a = getContext().getTheme()
+                        .obtainStyledAttributes(attributeSet, R.styleable.ReactionButton, 0, 0);
+                try {
+                    enableLottieAnimation = a.getBoolean(R.styleable.ReactionButton_RB_enable_reaction_animation, true);
+                } finally {
+                    a.recycle();
+                }
 
+            }
         }
 
         public boolean isEnableLottieAnimation() {
