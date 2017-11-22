@@ -3,15 +3,18 @@
     xmlns:reaction="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center"
     android:orientation="vertical">
 
     <com.app.reactions_android.ReactionButton
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        reaction:RB_font_size="14dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        reaction:RB_font_size="12dp"
+        reaction:RB_icon_height="20dp"
+        reaction:RB_icon_width="20dp"
         reaction:RB_selected_tint_color="@color/colorPrimary"
         reaction:RB_text_icon_alignment="right"
-        reaction:RB_text_icon_spacing="20dp"
+        reaction:RB_text_icon_spacing="10dp"
         reaction:RB_unselected_tint_color="@android:color/darker_gray" />
 
 </LinearLayout>

@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="font_icon_spacing">20dp</dimen>
+    <dimen name="icon_default_width">20dp</dimen>
+    <dimen name="icon_default_height">20dp</dimen>
 </resources>

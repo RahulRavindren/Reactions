@@ -31,6 +31,7 @@ public final class ReactionButton extends RelativeLayout
     private TextView titleLabel;
     private AttributeContainer attributeContainer;
     private ReactionButtonDelegate reactionButtonDelegate;
+    private Reaction SELECTED;
 
 
     public ReactionButton(Context context) {
@@ -76,15 +77,17 @@ public final class ReactionButton extends RelativeLayout
     private void inflateButton() {
         Logger.debug(TAG, "Inflating Button... ");
         ImageButton button = new ImageButton(getContext());
+        button.setId(Integer.MIN_VALUE);
         //default pick
         Reaction defaultReaction = Reaction.LIKE;
+        this.SELECTED = defaultReaction;
         Logger.debug(TAG, "Default reaction - " + defaultReaction.getTitle());
-        button.setBackground(null);
-        button.setImageResource(
-                attributeContainer.isSelected ? defaultReaction.getIcon() : defaultReaction.getAlternativeIcon());
+        button.setBackgroundResource(defaultReaction.getIcon());
         //button.setImageTintList(attributeContainer.isSelected ? new ColorStateList(attributeContainer.selectedColorRes) : new ColorStateList(attributeContainer.unselectedColorRes));
-        RelativeLayout.LayoutParams params =
-                new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        LayoutParams params =
+                new LayoutParams(ViewUtils.dpToPx(getContext(),
+                        (int) attributeContainer.reactionIconWidth),
+                        ViewUtils.dpToPx(getContext(), (int) attributeContainer.reactionIconHeight));
         TEXT_RELATIVE_ALIGNMENT align = TEXT_RELATIVE_ALIGNMENT.getAlignment(attributeContainer.fontRelativeAlignment);
         switch (align) {
             case RIGHT:
@@ -100,6 +103,7 @@ public final class ReactionButton extends RelativeLayout
     private void inflateText() {
         Logger.debug(TAG, "Inflating textview... ");
         TextView textView = new TextView(getContext());
+        textView.setId(Integer.MIN_VALUE + 1);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
                 LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         TEXT_RELATIVE_ALIGNMENT align = TEXT_RELATIVE_ALIGNMENT.getAlignment(attributeContainer.fontRelativeAlignment);
@@ -122,18 +126,27 @@ public final class ReactionButton extends RelativeLayout
                 getResources().getColor(attributeContainer.selectedColorRes));
 
         textView.setTextSize(attributeContainer.fontSize);
+        textView.setText(SELECTED.getTitle());
         addView(textView);
     }
 
+
+    //reaction to update when not default
     private void updateReaction(Reaction reaction) {
+        this.SELECTED = reaction;
         ImageButton reactionButton = (ImageButton) getChildAt(0);
         reactionButton.setImageResource(reaction.getIcon());
-        invalidate();
 
         //text
         TextView reactionText = (TextView) getChildAt(1);
         reactionText.setText(reaction.getTitle());
-        reactionText.setTextColor();
+        reactionText.setTextColor(getResources().getColor(reaction.getColor()));
+        invalidate();
+
+    }
+
+    private void resetReaction() {
+
     }
 
     @Override
@@ -175,6 +188,7 @@ public final class ReactionButton extends RelativeLayout
                         Logger.debug(TAG, "Onclick action on reaction ... ");
                         ObjectAnimator.ofFloat(view, "scaleX", 1.8f, 1.8f)
                                 .setDuration(300).start();
+
                     }
                     clear();
                     break;
@@ -219,7 +233,8 @@ public final class ReactionButton extends RelativeLayout
         private String fontRelativeAlignment;
         private boolean isSelected;
         private int selectedColorRes;
-
+        private float reactionIconWidth;
+        private float reactionIconHeight;
 
         public AttributeContainer(@NonNull final Context context,
                                   @Nullable final AttributeSet attributeSet) {
@@ -234,6 +249,10 @@ public final class ReactionButton extends RelativeLayout
                             a.getResourceId(R.styleable.ReactionButton_RB_unselected_tint_color, Color.GRAY);
                     selectedColorRes = a.getResourceId(R.styleable.ReactionButton_RB_selected_tint_color, Color.BLUE);
                     fontRelativeAlignment = a.getString(R.styleable.ReactionButton_RB_text_icon_alignment);
+                    reactionIconHeight = a.getDimension(R.styleable.ReactionButton_RB_icon_height,
+                            getResources().getDimension(R.dimen.icon_default_height));
+                    reactionIconWidth = a.getDimension(R.styleable.ReactionButton_RB_icon_width,
+                            getResources().getDimension(R.dimen.icon_default_width));
                 } finally {
                     a.recycle();
                 }
