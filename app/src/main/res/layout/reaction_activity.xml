@@ -3,12 +3,15 @@
     xmlns:reaction="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
+    android:layout_marginLeft="20dp"
+    android:gravity="center_vertical"
     android:orientation="vertical">
+
 
     <com.app.reactions_android.ReactionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        reaction:RB_enable_reaction_animation="false"
         reaction:RB_font_size="12dp"
         reaction:RB_icon_height="20dp"
         reaction:RB_icon_width="20dp"

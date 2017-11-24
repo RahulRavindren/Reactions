@@ -38,10 +38,10 @@ public class ReactionSelector extends LinearLayout {
     private void setup(AttributeContainer container) {
         if (container.isEnableLottieAnimation()) {
             // inflate lottie animated reaction
-            inflateWithLottie();
+            inflateWithLottie(container);
         } else {
             // inflate image reaction
-            inflateWithoutLottie();
+            inflateWithoutLottie(container);
         }
 
         //create bg
@@ -54,12 +54,21 @@ public class ReactionSelector extends LinearLayout {
     }
 
 
-    private void inflateWithoutLottie() {
+    private void inflateWithoutLottie(AttributeContainer container) {
         removeAllViews();
-
+        for (Reaction reaction : Reaction.DEFAULT_LIST) {
+            ReactionSelectorComponent selectorComponent =
+                    new ReactionSelectorComponent(getContext(), reaction);
+            selectorComponent.setTag(reaction);
+            //add view to rect cache
+            viewRectMap.put(selectorComponent, new Rect(selectorComponent.getTop(),
+                    selectorComponent.getLeft(), selectorComponent.getRight(),
+                    selectorComponent.getBottom()));
+            addView(selectorComponent);
+        }
     }
 
-    private void inflateWithLottie() {
+    private void inflateWithLottie(AttributeContainer container) {
         removeAllViews();
         for (Reaction reaction : Reaction.DEFAULT_LIST_LOTTIE) {
             ReactionSelectorComponent selectorComponent =

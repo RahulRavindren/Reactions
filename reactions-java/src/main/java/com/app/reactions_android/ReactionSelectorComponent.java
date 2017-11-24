@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -49,6 +50,12 @@ public class ReactionSelectorComponent extends LinearLayout {
 
     private void inflateImageView() {
         //todo
+        ImageView imageView = new ImageView(getContext());
+        imageView.setBackgroundResource(reaction.getIcon());
+        LayoutParams params = new LayoutParams(ViewUtils.dpToPx(getContext(), 30), ViewUtils.dpToPx(getContext(), 30));
+        imageView.setLayoutParams(params);
+
+        addView(imageView);
     }
 
     private void inflateLottieView() {
@@ -69,5 +76,13 @@ public class ReactionSelectorComponent extends LinearLayout {
         textView.setLayoutParams(params);
         textView.setBackground(getResources().getDrawable(R.drawable.selector_component_dark_background));
         addView(textView);
+        textView.setVisibility(GONE);
+    }
+
+    @Override
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        MarginLayoutParams margins = MarginLayoutParams.class.cast(getLayoutParams());
+        margins.leftMargin = 10;
+        setLayoutParams(margins);
     }
 }

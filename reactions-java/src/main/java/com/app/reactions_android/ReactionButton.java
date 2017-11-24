@@ -1,13 +1,13 @@
 package com.app.reactions_android;
 
 
-import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -32,6 +32,7 @@ public final class ReactionButton extends RelativeLayout
     private AttributeContainer attributeContainer;
     private ReactionButtonDelegate reactionButtonDelegate;
     private Reaction SELECTED;
+    private boolean isSelected = false;
 
 
     public ReactionButton(Context context) {
@@ -71,19 +72,20 @@ public final class ReactionButton extends RelativeLayout
 
     @Override
     public void setSelected(boolean selected) {
-        attributeContainer.isSelected = selected;
+        isSelected = selected;
     }
 
     private void inflateButton() {
         Logger.debug(TAG, "Inflating Button... ");
-        ImageButton button = new ImageButton(getContext());
+        ImageView button = new ImageView(getContext());
         button.setId(Integer.MIN_VALUE);
         //default pick
         Reaction defaultReaction = Reaction.LIKE;
         this.SELECTED = defaultReaction;
         Logger.debug(TAG, "Default reaction - " + defaultReaction.getTitle());
         button.setBackgroundResource(defaultReaction.getIcon());
-        //button.setImageTintList(attributeContainer.isSelected ? new ColorStateList(attributeContainer.selectedColorRes) : new ColorStateList(attributeContainer.unselectedColorRes));
+        button.setColorFilter(isSelected ? ContextCompat.getColor(getContext(), attributeContainer.selectedColorRes) :
+                ContextCompat.getColor(getContext(), attributeContainer.unselectedColorRes));
         LayoutParams params =
                 new LayoutParams(ViewUtils.dpToPx(getContext(),
                         (int) attributeContainer.reactionIconWidth),
@@ -107,11 +109,6 @@ public final class ReactionButton extends RelativeLayout
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
                 LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         TEXT_RELATIVE_ALIGNMENT align = TEXT_RELATIVE_ALIGNMENT.getAlignment(attributeContainer.fontRelativeAlignment);
-        if (align == null) {
-            align = TEXT_RELATIVE_ALIGNMENT.RIGHT;
-            //log
-        }
-
         switch (align) {
             case LEFT:
                 params.addRule(RelativeLayout.LEFT_OF, getChildAt(0).getId());
@@ -121,9 +118,8 @@ public final class ReactionButton extends RelativeLayout
                 break;
         }
         textView.setLayoutParams(params);
-        textView.setTextColor(attributeContainer.isSelected ?
-                getResources().getColor(android.R.color.darker_gray) :
-                getResources().getColor(attributeContainer.selectedColorRes));
+        textView.setTextColor(isSelected ? getResources().getColor(attributeContainer.selectedColorRes) :
+                getResources().getColor(attributeContainer.unselectedColorRes));
 
         textView.setTextSize(attributeContainer.fontSize);
         textView.setText(SELECTED.getTitle());
@@ -163,7 +159,7 @@ public final class ReactionButton extends RelativeLayout
     }
 
     class GestureRecogniser implements View.OnTouchListener {
-        private final float SCROLL_THRESHOLD = 10;
+        private final float SCROLL_THRESHOLD = 3;
         private float downX;
         private float downY;
         private boolean isOnClick;
@@ -171,7 +167,7 @@ public final class ReactionButton extends RelativeLayout
 
 
         @Override
-        public boolean onTouch(View view, MotionEvent motionEvent) {
+        public boolean onTouch(final View view, MotionEvent motionEvent) {
             switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
                 case MotionEvent.ACTION_DOWN:
                     downX = motionEvent.getX();
@@ -183,17 +179,21 @@ public final class ReactionButton extends RelativeLayout
                 case MotionEvent.ACTION_CANCEL:
                     break;
                 case MotionEvent.ACTION_UP:
-                    if (isOnClick && view.equals(this)) {
+                    if (isOnClick) {
                         //onclick action
                         Logger.debug(TAG, "Onclick action on reaction ... ");
-                        ObjectAnimator.ofFloat(view, "scaleX", 1.8f, 1.8f)
-                                .setDuration(300).start();
+                        view.animate().scaleX((float) 1.5).scaleY((float) 1.5).setDuration(300).withEndAction(new Runnable() {
+                            @Override
+                            public void run() {
+                                view.animate().scaleX(1).scaleY(1).setDuration(300);
+                            }
+                        });
 
                     }
                     clear();
                     break;
                 case MotionEvent.ACTION_MOVE:
-                    if (isOnClick && (Math.abs(downX - motionEvent.getX()) > SCROLL_THRESHOLD) ||
+                    if (isOnClick || (Math.abs(downX - motionEvent.getX()) > SCROLL_THRESHOLD) ||
                             (Math.abs(downY - motionEvent.getY()) > SCROLL_THRESHOLD)) {
                         Logger.debug(TAG, "move action on reaction selector... ");
                         isOnClick = false;
@@ -202,6 +202,7 @@ public final class ReactionButton extends RelativeLayout
                             if (viewRect.contains(Math.round(view.getRootView().getX() + downX),
                                     Math.round(view.getY() + downY))) {
                                 reactionFeedbackDidChanged(ReactionFeedback.SLIDE_FINGER_ACROSS);
+                                new ReactionSelectorPopup(getContext(), reactionButtonDelegate, view);
                                 reactionSelector.getReactionSelectorListener()
                                         .move(downX, motionEvent.getX(), downY, motionEvent.getY());
                             } else {
@@ -231,7 +232,6 @@ public final class ReactionButton extends RelativeLayout
         private float fontSize;
         private int unselectedColorRes;
         private String fontRelativeAlignment;
-        private boolean isSelected;
         private int selectedColorRes;
         private float reactionIconWidth;
         private float reactionIconHeight;
