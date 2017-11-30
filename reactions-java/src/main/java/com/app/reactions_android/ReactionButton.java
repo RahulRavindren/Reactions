@@ -198,13 +198,11 @@ public final class ReactionButton extends RelativeLayout
                         Logger.debug(TAG, "move action on reaction selector... ");
                         isOnClick = false;
                         if (viewRect != null) {
-                            view.getHitRect(viewRect);
+                            view.getGlobalVisibleRect(viewRect);
                             if (viewRect.contains(Math.round(view.getRootView().getX() + downX),
                                     Math.round(view.getY() + downY))) {
                                 reactionFeedbackDidChanged(ReactionFeedback.SLIDE_FINGER_ACROSS);
-                                new ReactionSelectorPopup(getContext(), reactionButtonDelegate, view);
-                                reactionSelector.getReactionSelectorListener()
-                                        .move(downX, motionEvent.getX(), downY, motionEvent.getY());
+                                new ReactionSelectorPopup(getContext(), reactionButtonDelegate, ReactionButton.this);
                             } else {
                                 reactionFeedbackDidChanged(ReactionFeedback.RELEASE_TO_CANCEL);
                             }

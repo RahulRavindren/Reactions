@@ -9,15 +9,13 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.app.reactions_android.delegate.ReactionButtonDelegate;
-import com.app.reactions_android.listeners.GuesterListeners;
 
 import java.util.LinkedHashMap;
-import java.util.Map;
 
 
 public class ReactionSelector extends LinearLayout {
+    public static final String TAG_NAME = ReactionSelector.class.getSimpleName();
     private final ReactionButtonDelegate delegate;
-    private ReactionSelectorListener reactionSelectorListener = new ReactionSelectorListener();
     private LinkedHashMap<View, Rect> viewRectMap = new LinkedHashMap<>();
 
     public ReactionSelector(Context context, ReactionButtonDelegate delegate) {
@@ -36,6 +34,7 @@ public class ReactionSelector extends LinearLayout {
     }
 
     private void setup(AttributeContainer container) {
+        setPadding(15, 20, 15, 20);
         if (container.isEnableLottieAnimation()) {
             // inflate lottie animated reaction
             inflateWithLottie(container);
@@ -44,13 +43,22 @@ public class ReactionSelector extends LinearLayout {
             inflateWithoutLottie(container);
         }
 
+        populateRectMap();
         //create bg
         createSelectorBackground();
-
     }
 
     private void createSelectorBackground() {
         setBackground(getResources().getDrawable(R.drawable.selector_oval_background));
+    }
+
+    private void populateRectMap() {
+        for (int i = 0; i < getChildCount(); i++) {
+            View v = getChildAt(i);
+            Rect vr = new Rect(v.getLeft(), v.getTop(), v.getRight(), v.getBottom());
+            v.getGlobalVisibleRect(vr);
+            viewRectMap.put(v, vr);
+        }
     }
 
 
@@ -74,31 +82,11 @@ public class ReactionSelector extends LinearLayout {
             ReactionSelectorComponent selectorComponent =
                     new ReactionSelectorComponent(getContext(), reaction);
             selectorComponent.setTag(reaction);
-            //add view to rect cache
-            viewRectMap.put(selectorComponent, new Rect(selectorComponent.getTop(),
-                    selectorComponent.getLeft(), selectorComponent.getRight(),
-                    selectorComponent.getBottom()));
+
             addView(selectorComponent);
         }
     }
 
-
-    public ReactionSelectorListener getReactionSelectorListener() {
-        return reactionSelectorListener;
-    }
-
-    public class ReactionSelectorListener implements GuesterListeners {
-        @Override
-        public void move(float oldX, float newX, float oldY, float newY) {
-            for (Map.Entry<View, Rect> entry : viewRectMap.entrySet()) {
-                entry.getKey().getHitRect(entry.getValue());
-                if (entry.getValue().contains((int) newX, (int) newY)) {
-                    //typecast to reaction
-                    delegate.hoveredReaction((Reaction) entry.getKey().getTag());
-                }
-            }
-        }
-    }
 
 
     protected class AttributeContainer {
@@ -122,5 +110,7 @@ public class ReactionSelector extends LinearLayout {
             return enableLottieAnimation;
         }
     }
+
+
 }
 

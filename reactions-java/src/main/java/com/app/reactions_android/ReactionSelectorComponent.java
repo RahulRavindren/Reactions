@@ -37,6 +37,7 @@ public class ReactionSelectorComponent extends LinearLayout {
 
     private void setup() {
         setOrientation(LinearLayout.VERTICAL);
+        setPadding(10, 0, 0, 0);
         removeAllViews();
 
         inflateTextView();
@@ -52,7 +53,7 @@ public class ReactionSelectorComponent extends LinearLayout {
         //todo
         ImageView imageView = new ImageView(getContext());
         imageView.setBackgroundResource(reaction.getIcon());
-        LayoutParams params = new LayoutParams(ViewUtils.dpToPx(getContext(), 30), ViewUtils.dpToPx(getContext(), 30));
+        LayoutParams params = new LayoutParams(ViewUtils.dpToPx(getContext(), 40), ViewUtils.dpToPx(getContext(), 40));
         imageView.setLayoutParams(params);
 
         addView(imageView);
@@ -79,10 +80,4 @@ public class ReactionSelectorComponent extends LinearLayout {
         textView.setVisibility(GONE);
     }
 
-    @Override
-    protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        MarginLayoutParams margins = MarginLayoutParams.class.cast(getLayoutParams());
-        margins.leftMargin = 10;
-        setLayoutParams(margins);
-    }
 }
